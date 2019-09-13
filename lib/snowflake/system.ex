@@ -2,9 +2,9 @@ defmodule Snowflake.System do
   @moduledoc """
   System gives the application structure through the system wide supervision tree in start_link/0
 
-  If the entire system goes down when it comes back up the ids generated will continue to be unique
-  as the basis is around the timestamp, per node unique node id, and counters to guard against submillisecond
-  collisions so to speak
+  If the entire system goes down when it comes back up, the ids generated will continue to be unique
+  as the basis is around the timestamp, per node persisted unique node id, and counters to guard against submillisecond
+  collisions
   """
 
   def start_link do

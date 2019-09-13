@@ -31,18 +31,15 @@ use Mix.Config
 
 # Prefix must match the names of the node list below it
 
-config :snowflake, prefix: "lookup_node"
-
 config :snowflake,
-  nodes:
-    Enum.map(1..4 |> Enum.into([]), fn i -> "lookup_node#{i}@127.0.0.1" |> String.to_atom() end)
+  prefix: "lookup_node",
+  port: 5454,
+  db_folder: "persist",
+  nodes: Enum.map(1..4 |> Enum.into([]), fn i -> "lookup_node#{i}@127.0.0.1" |> String.to_atom() end)
 
-config :snowflake, :database, folder: "persist"
-config :snowflake, port: 5454
 
 config :logger,
   # level: :warn   # For speed wrk tests
-  # In order to see how the program is working ;)
-  level: :debug
+   level: :debug  # In order to see how the program is working ;)
 
 import_config "#{Mix.env()}.exs"

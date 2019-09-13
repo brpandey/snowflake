@@ -3,7 +3,9 @@ defmodule Snowflake.Id do
   Module contains an implementation of a guaranteed globally unique id methodology.
 
   The unix Epoch timestamp is with milliseconds precision using 42 bits giving us 2^42.
-  Or alternatively the max value being 4398046511103.
+  Or alternatively the max value being
+  > :math.pow(2,42)
+  4398046511104.0 (subtracting 1)
 
   > 4398046511103 |> DateTime.from_unix!(:millisecond)
   ~U[2109-05-15 07:35:11.103Z]

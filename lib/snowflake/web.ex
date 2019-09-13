@@ -20,6 +20,7 @@ defmodule Snowflake.Web do
     Plug.Cowboy.child_spec(
       scheme: :http,
       options: [port: port()],
+      # options: [port: port(), protocol_options: [max_keepalive: 5_000_000]],
       plug: __MODULE__
     )
   end

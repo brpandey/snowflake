@@ -44,14 +44,23 @@ defmodule Snowflake.Database do
   end
 
   @impl GenServer
+
   def handle_continue(:load, :ok) do
+
     case load_local(@tbl, node()) do
       {:ok, @tbl} ->
-        [{@key, node_id}] = read(@tbl)
-        {:noreply, node_id}
-
-      _ ->
+        case read(@tbl) do
+          [{@key, node_id}] ->
+            {:noreply, node_id}
+          [] ->
+            raise "Unable to retrieve dets file contents, was it seeded correctly using mix seed?"
+        end
+      :test_node ->
         {:noreply, @test_mgr_node_port}
+
+      # If we can't read from the dets file correctly raise
+      {:error, reason} ->
+        raise "Unable to open dets file #{inspect(reason)}"
     end
   end
 
@@ -95,16 +104,16 @@ defmodule Snowflake.Database do
     end)
   end
 
-  def load_local(_table_name, :nonode@nohost), do: :error
+  def load_local(_table_name, :nonode@nohost), do: :test_node
   def load_local(table_name, node), do: load_single(table_name, "#{node}")
 
   defp load_single(table_name, node_name, seed \\ false)
        when is_atom(table_name) and is_binary(node_name) do
     # If these files don't exist write them
-    db_settings = Application.fetch_env!(:snowflake, :database)
+    dir = Application.fetch_env!(:snowflake, :db_folder)
     [name_prefix, _] = node_name |> String.split("@")
 
-    db_folder = "/#{Keyword.fetch!(db_settings, :folder)}/#{name_prefix}/"
+    db_folder = "/#{dir}/#{name_prefix}/"
     base_path = :code.priv_dir(:snowflake)
     db_path = base_path ++ String.to_charlist(db_folder)
 

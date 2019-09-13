@@ -1,8 +1,10 @@
 defmodule Snowflake.Dispatch do
   @moduledoc """
   Dispatch handles the request dispatch either local dispatch
-  or a load distribution remote snowflake dispatch commonly used
+  or remote lookup
 
+  The remote lookup can be used to mitigate load
+  
   A specific node or key can be specified or a random node
 
   We seed the random number generation upon process start up

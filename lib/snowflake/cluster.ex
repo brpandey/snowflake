@@ -3,10 +3,10 @@ defmodule Snowflake.Cluster do
   The Cluster module was included to illustrate how a system could be resilient during node failures
   - e.g. a network partition
 
-  If a request coming into node1 was to be routed to node3 but node3 is down it will get routed to another node
-  The use case here is when you are using load distribution via a user supplied url target key param
+  If a request coming into node1 was to be routed to node3 but node3 is down, it will get routed to another node
+  The use case here is when you are using load distribution with peer nodes
 
-  TODO: Add more unique keys per node using something like HashIds so we have better coverage when we do random()
+  NOTE: Could add more unique keys per node using something like HashIds so we have better coverage when we do random selection
   """
 
   use GenServer
@@ -158,6 +158,7 @@ defmodule Snowflake.Cluster do
     #    Improve coverage of finding node
     #    k2 = Hashids.encode(@hash_id, String.to_charlist(k1))
     #    k3 = Hashids.encode(@hash_id, String.to_charlist(k1) |> Enum.shuffle())
+    #    [k1, k2, k3]
 
     [k1]
   end
