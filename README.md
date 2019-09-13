@@ -326,8 +326,6 @@ Randomized with seed 540641
 
 ```
 
+Happy coding, thanks! 
 
-
-
-Thanks! 
 Bibek
