@@ -12,14 +12,14 @@ There are a fixed number of nodes in the system, up to 1024.
 Each node has a numeric id, 0 <= id <= 1023 which is stored in a dets file locally on the host to
 simulate multiple nodes. 
 
-Each node knows its id at startup and that id never changes for the node unless explicitly removed via deleted the priv/persist directory.
+Each node knows its id at startup and that id never changes for the node unless explicitly removed via deleting the priv/persist directory.
 
 We assume that any node will not receive more than 100,000 requests per second.
 
 NOTE: The highest requests/sec that I was able to see using wrk and wrk2 with Logger essentially turned off and
 max_keepalive connections set to 5M was around ~ 26k req/sec or ~ 800k req/30 secs.  I have added explicit coordination in the form
-of a peer lookup for load distribution purposes triggerd via the /dunique path and also to illustrate node and cluster resiliency.  
-The unique id generation itself does not rely on any distributed coordination other than a node_id read upon startup :)
+of a peer lookup for load distribution purposes triggered only via the /dunique path and also to illustrate node and cluster resiliency. The 
+unique id generation itself does not rely on any distributed coordination other than a node_id read upon startup :)
 
 ```elixir
 asdf install erlang 22.0.7
@@ -92,15 +92,15 @@ $ PORT=5457 elixir --name lookup_node4@127.0.0.1 -S mix run --no-halt
 A) Global uniqueness
 The ids are guaranteed globally unique assuming the source of timestamps has millisecond / sub millisecond precision,
 as we prevent id collisions by appending node_ids (or worker_ids) given a cluster. For id generations on the same node, we monotonically
-increment an atomic counter.  Should a node be deployed with multiple data centers either they should have different
+increment an atomic counter.  Should a node be deployed to multiple data centers either they should have different
 node ids or we should add some data center bits to our id generation. This is discussed more in the Id module. (This is all within the custom epoch time)
 
-Property testing can also be used to illustrate uniqueness
+Property testing can also be used to further verify uniqueness
 
 B) Performance - 100,000 req/sec per node?
-One node is able to hit a max of around 25k through various wrk tests.  Haven't tried the Tsung Erlang load test tool.
+One node is able to hit a max of around 25k requests through various wrk tests.  Haven't tried the Tsung Erlang load test tool.
 
-This was all done on a quad-core Linux box vs some cloud instances
+This was all done on a quad-core Linux box vs a cluster of cloud instances
 
 ```elixir
 $ cat  /proc/cpuinfo
@@ -118,7 +118,8 @@ Software defects are handled through exception handling and supervisors and let 
 Lastly, to run tests you may want to run the custom mix task and the Erlang port mapper daemon
 
 ```elixir 
-$ MIX_ENV=test mix seed $ epmd -daemon 
+$ MIX_ENV=test mix seed 
+$ epmd -daemon 
 ```
 
 Feel free to blow away the priv/persist dir and rerun the mix seed custom task
