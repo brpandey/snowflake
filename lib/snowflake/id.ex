@@ -69,7 +69,7 @@ defmodule Snowflake.Id do
     {unique_id, {tstamp, node_id, counter_ref, counter}}
   end
 
-  # if timestamps are different, use counter at 0 by subtracting from the current counter state
+  # if timestamps are different, reset counter to 0 since timestamp base has changed
   def get_id(tstamp2, {tstamp, node_id, counter_ref, counter})
       when tstamp2 != tstamp and node_id <= @max_node_id and node_id >= 0 and counter >= 0 and
              counter <= @max_ctr_id do

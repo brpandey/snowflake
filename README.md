@@ -1,7 +1,7 @@
 # [Snowflake](https://blog.twitter.com/engineering/en_us/a/2010/announcing-snowflake.html)
 
 A small distributed system in Elixir to assign unique numbers to each resource that is being managed. 
-These ids are globally unique numbers. Each id is only be given out at most once. The ids are 64 bits long.
+These ids are 64 bit globally unique numbers given out at most once.
 
 The service is composed of a set of nodes, each running one process serving ids. 
 
@@ -12,7 +12,7 @@ There are a fixed number of nodes in the system, up to 1024.
 Each node has a numeric id, 0 <= id <= 1023 which is stored in a dets file locally on the host to
 simulate multiple nodes. 
 
-Each node knows its id at startup and that id never changes for the node.
+Each node knows its id at startup and that id never changes for the node unless explicitly removed via deleted the priv/persist directory.
 
 We assume that any node will not receive more than 100,000 requests per second.
 
@@ -64,7 +64,7 @@ Running 30s test @ http://127.0.0.1:5454/dunique?target=random
 Requests/sec:  10236.57
 Transfer/sec:      1.99MB
 ```
-3) Using a lua script which iterates through each of the worker nodes on a single machine
+3) Using a lua script which utilizes each of the worker nodes on a single machine
 ```elixir
 $ wrk -t6 -c30 -d30s -s run.lua --latency http://127.0.0.1:5454
 Running 30s test @ http://127.0.0.1:5454
@@ -90,8 +90,8 @@ $ PORT=5456 elixir --name lookup_node3@127.0.0.1 -S mix run --no-halt
 $ PORT=5457 elixir --name lookup_node4@127.0.0.1 -S mix run --no-halt
 ```
 A) Global uniqueness
-The ids are guaranteed globally unique assuming the source of timestamps has millisecond sub millisecond precision,
-as we prevent id collisions by appending node_ids (or worker_ids) and for same node id generations we monotonically
+The ids are guaranteed globally unique assuming the source of timestamps has millisecond / sub millisecond precision,
+as we prevent id collisions by appending node_ids (or worker_ids) given a cluster. For id generations on the same node, we monotonically
 increment an atomic counter.  Should a node be deployed with multiple data centers either they should have different
 node ids or we should add some data center bits to our id generation. This is discussed more in the Id module. (This is all within the custom epoch time)
 
@@ -115,7 +115,8 @@ C) Failure cases
 Uniqueness is still preserved after system fails and restarts and node crashes since it is centered around timestamps
 Software defects are handled through exception handling and supervisors and let it crash :)
 
-Lastly, to run tests you may want to run $ MIX_ENV=test mix seed and start the Erlang port mapper daemon $ epmd -daemon
+Lastly, to run tests you may want to run the custom mix task and the Erlang port mapper daemon
+```elixir $ MIX_ENV=test mix seed $ epmd -daemon ```
 
 Feel free to blow away the priv/persist dir and rerun the mix seed custom task
 
