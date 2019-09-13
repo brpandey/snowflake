@@ -21,10 +21,12 @@ max_keepalive connections set to 5M was around ~ 26k req/sec or ~ 800k req/30 se
 of a peer lookup for load distribution purposes triggerd via the /dunique path and also to illustrate node and cluster resiliency.  
 The unique id generation itself does not rely on any distributed coordination other than a node_id read upon startup :)
 
+```elixir
 asdf install erlang 22.0.7
 asdf global erlang 22.0.7
 asdf install elixir 1.9.1
 asdf global elixir 1.9.1
+```
 
 Here's an example run
 
@@ -82,10 +84,10 @@ Transfer/sec:      3.93MB
 NOTE: For wrk tests open 5 terminals, 1 for the wrk command and the other for each of the nodes
 
 ```elixir
-brpandey@butterfly:~/Workspace/github/snowflake$ PORT=5454 elixir --name lookup_node1@127.0.0.1 -S mix run --no-halt
-brpandey@butterfly:~/Workspace/github/snowflake$ PORT=5455 elixir --name lookup_node2@127.0.0.1 -S mix run --no-halt
-brpandey@butterfly:~/Workspace/github/snowflake$ PORT=5456 elixir --name lookup_node3@127.0.0.1 -S mix run --no-halt
-brpandey@butterfly:~/Workspace/github/snowflake$ PORT=5457 elixir --name lookup_node4@127.0.0.1 -S mix run --no-halt
+$ PORT=5454 elixir --name lookup_node1@127.0.0.1 -S mix run --no-halt
+$ PORT=5455 elixir --name lookup_node2@127.0.0.1 -S mix run --no-halt
+$ PORT=5456 elixir --name lookup_node3@127.0.0.1 -S mix run --no-halt
+$ PORT=5457 elixir --name lookup_node4@127.0.0.1 -S mix run --no-halt
 ```
 A) Global uniqueness
 The ids are guaranteed globally unique assuming the source of timestamps has millisecond sub millisecond precision,
