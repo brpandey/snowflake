@@ -116,7 +116,10 @@ Uniqueness is still preserved after system fails and restarts and node crashes s
 Software defects are handled through exception handling and supervisors and let it crash :)
 
 Lastly, to run tests you may want to run the custom mix task and the Erlang port mapper daemon
-```elixir $ MIX_ENV=test mix seed $ epmd -daemon ```
+
+```elixir 
+$ MIX_ENV=test mix seed $ epmd -daemon 
+```
 
 Feel free to blow away the priv/persist dir and rerun the mix seed custom task
 
