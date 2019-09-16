@@ -326,6 +326,10 @@ Randomized with seed 540641
 
 ```
 
+Multiple nodes generating new ids
+
+![Logo](https://raw.githubusercontent.com/brpandey/snowflake/master/priv/images/generating_ids.png)
+
 Happy coding, thanks! 
 
 Bibek
